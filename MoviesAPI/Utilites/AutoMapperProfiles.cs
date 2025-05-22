@@ -8,11 +8,17 @@ namespace MoviesAPI.Utilites
     {
         public AutoMapperProfiles() {
             configareGenres();
+            configareActors();
         }
 
         private void configareGenres() {
             CreateMap<GenreCreationDTO, Genre>();
             CreateMap<Genre, GenreDTO>();
+        }
+
+        private void configareActors()
+        {
+            CreateMap<ActorCreationDTO, Actor>();
         }
     }
 }
