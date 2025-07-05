@@ -8,7 +8,7 @@ namespace MoviesAPI.DTOs
         [StringLength(150)]
         public string Name { get; set; }
         [Required]
-        public DateTime DateOfBirht { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public IFormFile? Picture { get; set; }
     }
 }
