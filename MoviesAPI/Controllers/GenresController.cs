@@ -21,7 +21,7 @@ namespace MoviesAPI.Controllers
         private const string cacheTag = "genre";
 
         public GenresController(IOutputCacheStore outputCacheStore, AppliactionDbContext context, IMapper mapper)
-            :base(context,mapper)
+            :base(context,mapper,outputCacheStore,cacheTag)
         {
             this.outputCacheStore = outputCacheStore;
             this.context = context;
@@ -48,47 +48,20 @@ namespace MoviesAPI.Controllers
         [HttpPost]
         public async Task<CreatedAtRouteResult> Post([FromBody] GenreCreationDTO genreCreationDTO)
         {
-            var genre = mapper.Map<Genre>(genreCreationDTO);
-            context.Add(genre);
-            await context.SaveChangesAsync();
-            await outputCacheStore.EvictByTagAsync(cacheTag, default);
-            var genreDTO = mapper.Map<GenreDTO>(genre);
-            return CreatedAtRoute("GetGenreById", new { id = genreDTO.Id }, genreDTO);
+            return await Post<GenreCreationDTO, Genre, GenreDTO>(genreCreationDTO, routeName: "GetGenreById");
         }
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var deletedRecords = await context.Genres.Where(g => g.Id == id).ExecuteDeleteAsync();
-
-            if (deletedRecords == 0)
-            {
-                return NotFound();
-            }
-
-            await outputCacheStore.EvictByTagAsync(cacheTag, default);
-            return NoContent();
+            return await Delete<Genre>(id);
 
         }
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Put(int id,[FromBody]GenreCreationDTO genreCreationDTO) 
-        { 
-            var genreExists = await context.Genres.AnyAsync(g => g.Id == id);
-
-            if (!genreExists) {
-                return NotFound();
-            }
-
-            var genre = mapper.Map<Genre>(genreCreationDTO);
-            genre.Id = id;
-
-            context.Update(genre);
-            await context.SaveChangesAsync();
-            
-            return NoContent();
-
-
+        {
+            return await Put<Genre, GenreCreationDTO>(id, genreCreationDTO);
         }
     }
 }

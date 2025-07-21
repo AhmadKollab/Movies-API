@@ -1,6 +1,6 @@
 ﻿namespace MoviesAPI.DTOs
 {
-    public class IId
+    public interface IId
     {
         public int Id { get; set; }
     }

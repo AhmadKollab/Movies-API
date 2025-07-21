@@ -24,7 +24,7 @@ namespace MoviesAPI.Controllers
         private readonly string container = "actors";
 
         public ActorsController(AppliactionDbContext context, IMapper mapper, IOutputCacheStore outputCacheStore, IFileStorge fileStorge)
-            :base(context,mapper)
+            :base(context,mapper,outputCacheStore,cacheTag)
         {
             this.context = context;
             this.mapper = mapper;
